@@ -1,5 +1,9 @@
 #!/usr/bin/env sh
 
-dnsmasq-reload -u root $*
+cp -f /etc/dnsmasq.tmpl /etc/dnsmasq.tmpl.append
 
-docker-gen -watch -notify "dnsmasq-reload -u root $*" /etc/dnsmasq.tmpl /etc/dnsmasq.conf
+if [ -n "$NEXT_DNS" ]; then
+  echo "server=$NEXT_DNS" >> /etc/dnsmasq.tmpl.append
+fi
+
+docker-gen -watch -notify "dnsmasq-reload -u root $*" /etc/dnsmasq.tmpl.append /etc/dnsmasq.conf

@@ -41,9 +41,6 @@ address=/{{ $host }}.{{ $network.Name }}.{{ $tld }}/{{ $network.IP }}
 {{ end }}
 
 bind-interfaces
-#interface=eth0
 except-interface=lo
-
-local=/docker/
 no-resolv
 

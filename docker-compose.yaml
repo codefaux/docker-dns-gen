@@ -1,0 +1,18 @@
+services:
+   alpha-dns-gen:
+    container_name: alpha-dns-gen
+    image: ghcr.io/codefaux/docker-dns-gen:latest
+    hostname: alpha-dns-gen
+    environment:
+      NEXT_DNS: 172.16.200.5  # optional
+    networks:
+      vlan-services:
+        ipv4_address: 172.16.200.6
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: always
+
+networks:
+  vlan-services:
+    external: true
+    name: vlan-services

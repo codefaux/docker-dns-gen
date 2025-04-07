@@ -1,17 +1,24 @@
 # docker-dns-gen
 
+
 ## How it works
 
 docker-dns-gen sets up a container running [dnsmasq](https://thekelleys.org.uk/dnsmasq/doc.html) and [docker-gen](https://github.com/nginx-proxy/docker-gen).
 docker-gen generates a configuration for dnsmasq and reloads it when containers
 are started and stopped. dnsmasq resolves only these containers, to all ifaces.
 
+You must include a volume mapping /var/run/docker.sock into the container in the
+same spot. It may (should) be read-only.
+
+If, like me, you have multiple docker hosts whose containers must resolve, pass
+NEXT_DNS environment variable to container. Do not create a loop by passing your
+last resolver to your first resolver.
+
 It will provide thoses domain:
 - `container_name.docker`
 - `container_name.network_name.docker`
 - `docker-composer_service.docker-composer_project.docker`
 - `docker-composer_service.docker-composer_project.network_name.docker`
-
 
 
 ## Rationale
