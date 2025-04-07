@@ -1,8 +1,10 @@
-# Docker DNS-gen
+# docker-dns-gen
 
-dns-gen sets up a container running Dnsmasq and [docker-gen].
-docker-gen generates a configuration for Dnsmasq and reloads it when containers are
-started and stopped.
+## How it works
+
+docker-dns-gen sets up a container running dnsmasq and [docker-gen].
+docker-gen generates a configuration for dnsmasq and reloads it when containers
+are started and stopped. dnsmasq resolves only these containers, to all ifaces.
 
 It will provide thoses domain:
 - `container_name.docker`
@@ -10,12 +12,21 @@ It will provide thoses domain:
 - `docker-composer_service.docker-composer_project.docker`
 - `docker-composer_service.docker-composer_project.network_name.docker`
 
-## How it works
 
-The container `dns-gen` expose a standard dnsmasq service. It returns IPs of
-known containers. It does NOT resolve any other addresses. It is meant to
-supplement an existing local DNS server, such as AdGuard, PiHole, or your router.
-Use it to resolve container IPs from other containers/hosts on the same network.
-I use it so my edge router reverse proxy can find my externally-exposed services
-across hosts by container name instead of manually tracked IPs. It is intended to
-be bound to its own IP (preferably static) on a network using ipvlan or macvlan.
+
+## Rationale
+
+It is meant to supplement an existing local DNS server, such as AdGuard, PiHole,
+or your router. Use it to resolve container IPs from other containers/hosts on the
+same network.
+
+Example: You have two docker hosts on your LAN, and all of the containers on these
+hosts is on the same VLAN network bound into Docker which we'll call docker-vlan,
+via ipvlan or macvlan. Say, Sonarr/Radarr/Emby/Sabnzbd/Tdarr on one host, and Home
+Assistant and Mealie on another host. Caddy or other reverse proxies run on a third
+host would need static IP entries for every container to reach them. Adding a
+docker-dns-gen container to each host and adding it to your DNS list will enable
+container lookup by name instead.
+
+I understand that probably nobody else will use this. I needed it.
+If you also need it, feel free to thank me somehow, I'll appreciate it.
