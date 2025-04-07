@@ -2,7 +2,7 @@
 
 ## How it works
 
-docker-dns-gen sets up a container running dnsmasq and [docker-gen].
+docker-dns-gen sets up a container running [dnsmasq](https://thekelleys.org.uk/dnsmasq/doc.html) and [docker-gen](https://github.com/nginx-proxy/docker-gen).
 docker-gen generates a configuration for dnsmasq and reloads it when containers
 are started and stopped. dnsmasq resolves only these containers, to all ifaces.
 
