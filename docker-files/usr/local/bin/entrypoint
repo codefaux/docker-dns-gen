@@ -4,6 +4,8 @@ cp -f /etc/dnsmasq.tmpl /etc/dnsmasq.tmpl.append
 
 if [ -n "$NEXT_DNS" ]; then
   echo "server=$NEXT_DNS" >> /etc/dnsmasq.tmpl.append
+else
+  echo "local=/docker/" >> /etc/dnsmasq.tmpl.append
 fi
 
-docker-gen -watch -notify "dnsmasq-reload -u root $*" /etc/dnsmasq.tmpl.append /etc/dnsmasq.conf
+docker-gen -watch -notify "dnsmasq-reload -u root" /etc/dnsmasq.tmpl.append /etc/dnsmasq.conf
