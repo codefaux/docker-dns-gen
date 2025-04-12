@@ -3,9 +3,13 @@
 cp -f /etc/dnsmasq.tmpl /etc/dnsmasq.tmpl.append
 
 if [ -n "$NEXT_DNS" ]; then
+  # if NEXT_DNS env supplied, use it
   echo "server=$NEXT_DNS" >> /etc/dnsmasq.tmpl.append
 else
+  # otherwise consider self authoratative and return NXDOMAIN
   echo "local=/docker/" >> /etc/dnsmasq.tmpl.append
 fi
 
-docker-gen -watch -notify "dnsmasq-reload -u root" /etc/dnsmasq.tmpl.append /etc/dnsmasq.conf
+# wait for 3s after container reloads for service(s) to be ready, not more than 20s
+# -- avoids DNS disappearing due to rapid restart w/ container bouncing
+docker-gen -wait 3s:20s -watch -notify "dnsmasq-reload -u root" /etc/dnsmasq.tmpl.append /etc/dnsmasq.conf
